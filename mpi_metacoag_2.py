@@ -20,7 +20,7 @@ def run_metacoag(folder_name, rank):
             + folder_name + "/abundance.tsv"
             + " --output "
             + folder_name + "/"
-            + " --nthreads 8"
+            + " --nthreads 4"
         )
     
     # print(metacoag_cmd)
@@ -41,37 +41,30 @@ if __name__ == "__main__":
     rank = comm.Get_rank()
     size = comm.Get_size()
 
-    print("rank:", rank)
-    print("size:", size)
-
     if rank == 0:
-        input_folders = ["/scratch/director2187/vmall/mpi_test/5G", 
-                         "/scratch/director2187/vmall//mpi_test/10G"]  # List of input folders
+        input_folders = ["/scratch/user/mall0133/mpi_test/5G", 
+                         "/scratch/user/mall0133/mpi_test/10G"]  # List of input folders
 
         # Scatter the folders
         for i in range(1, size):
-            datap = [input_folders[i].encode('utf-8'), MPI.CHAR]
-            comm.Send(datap, dest=1, tag=11)
+            comm.send(input_folders[i], dest=i)
 
     # Receive the folder
     if rank == 0:
         received_data = input_folders[0]
     else:
-        buf = bytearray()
-        comm.Recv([buf, MPI.CHAR], source=0, tag=11)
-        received_data = buf.decode('utf-8')
+        received_data = comm.recv(source=0)
 
     # Process the received folder
     results = run_metacoag(received_data, rank)
 
-    # # Gather the number of bins from all processes
-    # all_results = comm.Gather(results, root=0)
+    # Gather the number of bins from all processes
+    all_results = comm.gather(results, root=0)
 
 
-    # if rank == 0:
+    if rank == 0:
 
-    #     # Process the gathered results
-    #     final_result = sum(all_results)
-    #     print("Total number of bins produced:", final_result)
-
+        # Process the gathered results
+        final_result = sum(all_results)
+        print("Total number of bins produced:", final_result)
 
