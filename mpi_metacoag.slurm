@@ -12,6 +12,4 @@ module load py-mpi4py/3.1.4-py3.10.10
 # export OMPI_MCA_pml="ucx"
 # export OMPI_MCA_osc="ucx"
 
-# mpirun -n 2 python mpi_metacoag_2.py
-
 srun python mpi_metacoag_2.py
