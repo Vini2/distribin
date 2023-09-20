@@ -1,6 +1,6 @@
 # bistribin: Distributed metagenomic binning
 
-As part of the [PaCER Hackathon 2023](https://github.com/PawseySC/pacer-hackathon-2023) I set out to learn/refresh my understanding about distributed computing and see if I can apply those concepts to distribute and bin multiple metagenomes. I also wanted to learn about the message passing interface (MPI). Here is the basic idea of my project. 
+As part of the [PaCER Hackathon 2023](https://github.com/PawseySC/pacer-hackathon-2023) I set out to learn and refresh my understanding of distributed computing and see if I can apply those concepts to distribute and bin multiple metagenomes. I also wanted to learn about the message passing interface (MPI). Here is the basic idea of my project. 
 <p align="center">
   <img src="https://raw.githubusercontent.com/Vini2/binMPI/master/MPI_binning.png" width="800">
 </p>
@@ -11,11 +11,11 @@ I used two approaches.
 
 ## Array jobs
 
-Using the SLURM `--array` and passing a list of files to use for each job, I got to distribute the binning jobs to different nodes. Check out the `metacoag.slurm` file.
+Using the SLURM `--array` and passing a list of files to use for each job, I was able to distribute the binning jobs to different nodes. Check out the `metacoag.slurm` file for further details.
 
 ## MPI
 
-This was the challenging part. Rather than rewriting my code to distribute chunks of one dataset, I wanted to distribute one dataset per node using MPI, do the binning, gather the results and do some statistics.
+This was the challenging part. Rather than rewriting my code to distribute chunks of one dataset, I decided to distribute one dataset per node using MPI, do the binning, gather the results and do some statistics.
 
 
 ### Setting up MPI
@@ -28,7 +28,7 @@ As my code was in python, I used the MPI python interface [`mpi4py`](https://mpi
 
 ### Setting up `metacoag`
 
-I downloaded the source code of `metacoag` from GitHub and installed it using pip locally.
+I downloaded the source code of [MetaCoAG](https://github.com/metagentools/MetaCoAG) from GitHub and installed it using pip locally.
 
 ```bash
 git clone https://github.com/Vini2/MetaCoAG.git
