@@ -18,9 +18,62 @@ As my code was in python, I used the MPI python interface [`mpi4py`](https://mpi
 
 I downloaded the source code of `metacoag` from GitHub and installed it using pip locally.
 
-```
+```bash
 git clone https://github.com/Vini2/MetaCoAG.git
 cd MetaCoAG/
 pip install -e .
 ```
 
+## The basic idea
+
+```python
+from mpi4py import MPI
+
+def run_metacoag(folder_name, rank):
+  # bin dataset
+  # get nbins
+  return nbins
+
+if __name__ == "__main__":
+    comm = MPI.COMM_WORLD
+    rank = comm.Get_rank()
+    size = comm.Get_size()
+
+    if rank == 0:
+        # List of input folders
+        input_folders = ["/path/to/test_dataset_1", 
+                         "/path/to/test_dataset_2"]
+
+        # Scatter the folders
+        for i in range(1, size):
+            comm.send(input_folders[i], dest=i)
+
+    # Receive the folder
+    if rank == 0:
+        received_data = input_folders[0]
+    else:
+        received_data = comm.recv(source=0)
+
+    # Process the received folder
+    results = run_metacoag(received_data, rank)
+
+    # Gather the number of bins from all processes
+    all_results = comm.gather(results, root=0)
+
+
+    if rank == 0:
+
+        # Process the gathered results
+        final_result = sum(all_results)
+        print("Total number of bins produced:", final_result)
+```
+
+Basically, we have a set of folder paths in `input_folders` and we scatter them to nodes (done by `comm.send`). Then the nodes receive the data (done by `comm.recv`) and process it. Finally, the results are gathered (done by `comm.gather` and processed (here the total is calculated).
+
+## How to run?
+
+Change `input_folders` to your list of folders, load the relevant modules (e.g., MPI and `mpi4py`) and launch the SLURM script using,
+
+```
+sbatch mpi_metacoag.slurm
+```
