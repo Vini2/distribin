@@ -1,4 +1,4 @@
-# bistribin: Distributed metagenomic binning
+# distribin: Distributed metagenomic binning
 
 As part of the [PaCER Hackathon 2023](https://github.com/PawseySC/pacer-hackathon-2023) I set out to learn and refresh my understanding of distributed computing and see if I can apply those concepts to distribute and bin multiple metagenomes. I also wanted to learn about the message passing interface (MPI). Here is the basic idea of my project. 
 <p align="center">
